@@ -1,0 +1,205 @@
+# Notes included
+
+class Warrior:
+
+    # Initialize a Warrior object with some default values
+    def __init__(self, name='', hp=100, attack=1,  defense=1, speed=50, ):
+        self.plpenalty = 0
+        self.oppenalty = 0
+        self.name = name
+        self.hp = hp
+        self.attack = attack
+        self.defense = defense
+        self.speed = speed
+        self.weapon = self.equip_weapon()
+        self.armor = self.don_armor()
+        self.environment = self.choose_envi()
+        self.opponent = self.choose_opp()
+
+
+    # method to have a Warrior player take damage
+    def take_damage(self, damage):
+        prior_hp = self.hp
+        self.hp -= damage
+        print(f'{self.name} took {damage} points of damage, dropping hit points from {prior_hp} to {self.hp}')
+        if self.hp < 1:
+            print(f'Your warrior died')
+
+    # Equip a weapon
+    def equip_weapon(self):
+        menu = (
+            'Choose weapon:\n\n'
+            '1. Dagger (+20 attack, +0 speed)\n'
+            '2. Sword (+30 attack, -10 speed)\n'
+            '3. Axe (+40 attack, -20 speed)\n'
+        )
+        while True:
+            choice = input(menu)
+            if choice in ('0', '1', '2', '3'):
+                return Weapon(choice)
+
+    # Don armor
+    def don_armor(self):
+        menu = (
+            'Choose armor:\n\n'
+            '1. Light (+15 defense, -5 speed)\n'
+            '2. Medium (+25 defense, -15 speed)\n'
+            '3. Heavy (+35 defense, -25 speed)\n'
+        )
+        while True:
+            choice = input(menu)
+            if choice in ('0', '1', '2', '3'):
+                return Armor(choice)
+
+
+    # Choose Envi
+    def choose_envi( self ):
+        menu = (
+            'Choose your Map:\n\n'
+            '1.) Arena : (No Penalty)\n'
+            '2.  Swamp :Player takes 1 damage | -+1 atk to enemy\n'
+            '3. Colloseum :Player +1 Atk || Enemy -1 Def\n'
+        )
+        while True:
+            choice = input(menu)
+            if choice in ('0', '1', '2', '3'):
+                return Environment(choice)
+    #Choose Opponent
+    def choose_Enemy( self ):
+        menu = (
+            'Choose your Enemy:\n\n\t '
+            '1.) Thief HP: 150 || ATK: 20 || Def: 10 || Spd: 40 \n\n\t '
+            '2.) Viking HP: 250 || ATK: 30 || Def: 20 || Spd: 30 \n\n\t '
+            '3.) Minotaur HP: 350 ||ATK: 40 || Def: 30 || Spd: 20\n '
+        )
+        while True:
+            choice = input(menu)
+            if choice in ('0', '1', '2', '3'):
+                return Opponent(choice)
+
+    def status(self):
+        print(f'Warrior: {self.name}')
+        print(f'hp={self.hp}, attack={self.attack}, defense={self.defense}, speed={self.speed}')
+        attack = self.attack + self.weapon.attack_mod
+        speed = self.speed + self.weapon.speed_mod
+        print(f'After equipping {self.weapon.name}, attack={attack}, speed={speed}\n')
+        defense = self.defense + self.armor.defense_mod
+        speed += self.armor.speed_mod
+        print(f'After donning {self.armor.name} armor, defense={defense}, speed={speed}\n')
+
+    #Choose Environment
+    def map( self ):
+       print(f'Warrior: {self.name}')
+       print(f'plpenalty={self.plpenalty}, oppenalty={self.oppenalty}' )
+       plpenalty = self.plpenalty + self.environment.plpenalty_mod
+       oppenalty = self.oppenalty + self.environment.oppenalty_mod
+       print(f'After donning {self.environment.name} environment, plpenalty={plpenalty}, oppenalty={oppenalty}\n')
+
+    def opp( self ):
+        print(f'Warrior: {self.name}')
+        print(f'hp={self.hp}, attack={self.attack}, defense={self.defense}, speed={self.speed}')
+        hp = self.hp + self.opponent.name
+
+class Armor:
+
+    def __init__(self, item='0'):
+        if item == '1':
+            self.name = 'light'
+            self.defense_mod = 15
+            self.speed_mod = -5
+        elif item == '2':
+            self.name = 'medium'
+            self.defense_mod = 25
+            self.speed_mod = -15
+        elif item == '3':
+            self.name = 'heavy'
+            self.defense_mod = 35
+            self.speed_mod = -25
+        else:
+            self.name = 'no'
+            self.defense_mod = 0
+            self.speed_mod = 5
+
+class Environment:
+
+    def __init__(self, item='0'):
+        if item == '1':
+            self.name = 'Arena'
+            self.plpenalty_mod += 0
+            self.oppenalty_mod += 0
+        elif item == '2':
+            self.plpenalty_mod = 1
+            self.oppenalty_mod = 1
+            self.Name = "Swamp"
+        elif item == '3':
+            self.plpenalty_mod = 1
+            self.oppenalty_mod = 1
+            self.Name = "Colloseum"
+        else:
+            self.name = 'no'
+            self.plpenalty_mod = 0
+            self.oppenalty_mod = 5
+
+
+class Weapon:
+
+    def __init__(self, item='0'):
+        if item == '1':
+            self.name = 'dagger'
+            self.attack_mod = 20
+            self.speed_mod = 0
+        elif item == '2':
+            self.name = 'sword'
+            self.attack_mod = 30
+            self.speed_mod = -10
+        elif item == '3':
+            self.name = 'axe'
+            self.attack_mod = 40
+            self.speed_mod = -20
+        else:
+            self.name = 'no'
+            self.attack_mod = 5
+            self.speed_mod = 10
+
+
+class Opponent:
+
+ def __init__(self, item=0):
+     if item == '1':
+         self.name = 'Thief'
+         self.hp = 150
+         self.attack_mod = 20
+         self.defense= 10
+         self.speed_mod = 40
+
+     elif item == '2':
+         self.name = 'Viking'
+         self.hp = 250
+         self.attack_mod = 30
+         self.defense = 20
+         self.speed_mod = 30
+     elif item == '3':
+         self.name = 'Minotaur'
+         self.hp = 350
+         self.attack_mod = 40
+         self.defense = 30
+         self.speed_mod = 20
+     else:
+         self.name = 'no'
+         self.attack_mod = 0
+         self.speed_mod = 5
+
+
+
+# Everything above only defines classes and methods. The reason why your code
+# failed is mostly because it defined everything, then exited.
+# Below, are instructions for the program to do something.
+
+name = input('Name of warrior: ')
+player = Warrior(name=name)  # create a new Warrior object and assign it to player
+for damage in range(10, 200, 20):
+ player.status()
+ player.map()# more methods running
+ player.take_damage(damage)
+ if player.hp < 1:  # accessing an attribute without a getHP() method
+        break
